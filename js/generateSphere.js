@@ -72,25 +72,6 @@ function generateSphere() {
     arrow([0,1,0], [0,1,0], [0,1.6,0], sphere, 0x00ff00, 'North') // north
 }
 
-function createLineFromPl(pl, color='#000000') {
-    const skins = []
-
-    const filter = io.IOFactory.getFilter('test.pl') // fake filename in order to have the filter
-    const dfs = filter.decode(pl, {shared: false, merge: true})
-    dfs.forEach( df => {
-        let skin = kepler.createLineset2({
-            position: df.series.positions,
-            parameters: {
-                width  : 0.001,
-                color  : '#000000',
-                opacity: 1
-            }
-        })
-        skins.push(skin)
-    })
-    return skins
-}
-
 function arrow(d, o, pos, parent, color, name) {
     const dir = new three.Vector3( d[0], d[1], d[2] )
     dir.normalize()

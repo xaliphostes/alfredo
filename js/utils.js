@@ -1,104 +1,15 @@
-function changeFOV(id) {
-    let itemList = document.getElementById("fov")
-    let collection = itemList.selectedOptions
-    if (collection[0].label === 'Perspective') {
-        camera.fov = 45
-    }
-    else {
-        camera.fov = 1
-    }
-    // const fov = parseFloat(collection[0].label)
-    // camera.fov = fov
-    camera.updateProjectionMatrix()
-    extra.fitScene({ scene, camera, controls })
-    // extra.zoomToModel({scene, camera, controls, duration:300})
-}
-
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    controls.handleResize()
-}
-
-function animate() {
-    renderFct.render()
-    requestAnimationFrame(animate)
-}
-
-const randColor = () => {
-    const color = new THREE.Color(0xffffff)
-    color.setHex(Math.random() * 0xffffff)
-    return '#' + color.getHexString()
-}
-
-function createGrayColor(intensity) {
-    if (intensity === 0) {
-        return '#000000'
-    }
-    const value = intensity * 0xFF | 0
-    const grayscale = (value << 16) | (value << 8) | value
-    const gray = grayscale.toString(16)
-    return gray.length === 5 ? '#0' + gray : '#' + gray
-}
-
-function addLights() {
-    if (lights === undefined) {
-        lights = extra.createDefaultLights({ object: scene })
-        scene.add(lights)
-    }
-
-}
-
-function load() {
-    let promises = []
-
-    promises.push(...doLines(plines))
-    // promises.push(...doPointsets(pointsets))
-
-    Promise.all(promises).then(_ => {
-        generateSphere()
-        postInit()
-    })
-        .then(() => {
-            extra.changeView('up', { scene, camera, controls })
-            extra.fitScene({ scene, camera, controls, selection: sphereFake, fitRatio: 2 })
-
-            // const HUD = new kepler.ScaleBar( kepler.generateColorMap('Insar', 100, 1) )
-            // renderFct.add( HUD.render )
-
-            if (model && model.grid) {
-                extra.createGridHelper(group, new extra.GridHeplerParameters({
-                    renderFunctions: renderFct,
-                    renderer,
-                    camera,
-                    scene,
-                    extendCoef: 1.0,
-                    fading: false,
-                    fadingTime: 200,
-                    showPlanes: true,
-                    color: '#aaa',
-                    showBBox: false,
-                    divisions: 4
-                }),
-                    new extra.GridTextParameters({
-                        rect: true,
-                        rectColor: '#fff',
-                        fontColor: '#000',
-                        fontSize: 30
-                    }))
-            }
-
-
-            bbox = kepler.createBBox(group, new kepler.BBoxParameters({
-                color: '#000'
-            }))
-            bbox.visible = false
-            scene.add(bbox)
-
-
-            connectGUI()
+function createLineFromPl(pl, color = '#000000', width = 0.001) {
+    const skins = []
+    const filter = io.IOFactory.getFilter('test.pl') // fake filename in order to have the filter
+    const dfs = filter.decode(pl, {shared: false, merge: true})
+    dfs.forEach( df => {
+        let skin = kepler.createLineset2({
+            position: df.series.positions,
+            parameters: {width, color, opacity: 1}
         })
+        skins.push(skin)
+    })
+    return skins
 }
 
 function changeSigma(s1, s2, s3) {
@@ -231,6 +142,114 @@ function connectGUI() {
 
     const run = gui.addFolder('Simulation')
     run.add(myObject, 'run').name('run')
+}
+
+
+
+// ===========================================================
+
+
+
+function changeFOV(id) {
+    let itemList = document.getElementById("fov")
+    let collection = itemList.selectedOptions
+    if (collection[0].label === 'Perspective') {
+        camera.fov = 45
+    }
+    else {
+        camera.fov = 1
+    }
+    // const fov = parseFloat(collection[0].label)
+    // camera.fov = fov
+    camera.updateProjectionMatrix()
+    extra.fitScene({ scene, camera, controls })
+    // extra.zoomToModel({scene, camera, controls, duration:300})
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    controls.handleResize()
+}
+
+function animate() {
+    renderFct.render()
+    requestAnimationFrame(animate)
+}
+
+const randColor = () => {
+    const color = new THREE.Color(0xffffff)
+    color.setHex(Math.random() * 0xffffff)
+    return '#' + color.getHexString()
+}
+
+function createGrayColor(intensity) {
+    if (intensity === 0) {
+        return '#000000'
+    }
+    const value = intensity * 0xFF | 0
+    const grayscale = (value << 16) | (value << 8) | value
+    const gray = grayscale.toString(16)
+    return gray.length === 5 ? '#0' + gray : '#' + gray
+}
+
+function addLights() {
+    if (lights === undefined) {
+        lights = extra.createDefaultLights({ object: scene })
+        scene.add(lights)
+    }
+}
+
+function load() {
+    let promises = []
+
+    promises.push(...doLines(plines))
+    // promises.push(...doPointsets(pointsets))
+
+    Promise.all(promises).then(_ => {
+        generateSphere()
+        postInit()
+    })
+        .then(() => {
+            extra.changeView('up', { scene, camera, controls })
+            extra.fitScene({ scene, camera, controls, selection: sphereFake, fitRatio: 2 })
+
+            // const HUD = new kepler.ScaleBar( kepler.generateColorMap('Insar', 100, 1) )
+            // renderFct.add( HUD.render )
+
+            if (model && model.grid) {
+                extra.createGridHelper(group, new extra.GridHeplerParameters({
+                    renderFunctions: renderFct,
+                    renderer,
+                    camera,
+                    scene,
+                    extendCoef: 1.0,
+                    fading: false,
+                    fadingTime: 200,
+                    showPlanes: true,
+                    color: '#aaa',
+                    showBBox: false,
+                    divisions: 4
+                }),
+                    new extra.GridTextParameters({
+                        rect: true,
+                        rectColor: '#fff',
+                        fontColor: '#000',
+                        fontSize: 30
+                    }))
+            }
+
+
+            bbox = kepler.createBBox(group, new kepler.BBoxParameters({
+                color: '#000'
+            }))
+            bbox.visible = false
+            scene.add(bbox)
+
+
+            connectGUI()
+        })
 }
 
 function addObjectLabel(parent, text, x, y, z) {

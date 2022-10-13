@@ -5,9 +5,7 @@ function postInit() {
     } else {
         extra.changeBackground( {scene, color: '#fff'} )
     }
-
-    // const lights = extra.createDefaultLights({object: scene})
-    // scene.add(lights)
+    
     addLights()
 
     const keyboard = new extra.Keyboard(document, 'keydown')

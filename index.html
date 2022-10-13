@@ -43,12 +43,23 @@
             <input id="btnFullscreen" type="button" value="Fulll screen" onclick="fullScreen()" style="position: absolute; opacity: 40%; margin-bottom:3px; top: 110px; right: 5px;">
         </span>
     </div>
-    <div class="bottom-1 start-1" style='position: absolute; opacity: 40%; left: 20px; bottom: 20px'>
-        <img src="youwol-logo.png" alt="youwol">
+    
+    <div class="bottom-1 start-1" style='position: absolute; opacity: 70%; left: 20px; bottom: 20px;'>
+        <a href="https://www.youwol.com/" target="_blank">
+            <img src="youwol.png" style="width: 150px;">
+        </a>
     </div>
-    <div class="bottom-1 start-1" style='position: absolute; opacity: 40%; left: 55px; bottom: 0px'>
-        <div class="card-title" style='font-size: 30px; font-weight: bold; z-index: 999;'>YouWol</div>
+    <!-- <div class="bottom-1 start-1" style='position: absolute; opacity: 70%; left: 55px; bottom: 0px'>
+        <a href="https://www.youwol.com/" target="_blank">
+            <div class="card-title" style='color: black; font-size: 30px; font-weight: bold; z-index: 999;'>YouWol</div>
+        </a>
+    </div> -->
+    <div class="bottom-1 start-1" style='position: absolute; opacity: 70%; right: 20px; bottom: 20px;'>
+        <a href="http://www.gm.univ-montp2.fr/" target="_blank">
+            <img src="geosciences.png" alt="geosciences" style="width: 130px;">
+        </a>
     </div>
+
     <div id="menu" style="position: absolute; opacity: 70%; margin-bottom:3px; top: -25px; left: 5px;">
     <input id="upload" type="file" style="visibility:hidden" />
      <div class="top-1 start-1" style='position: absolute; opacity: 75%; left: 250px; top: 30px'>
@@ -80,9 +91,8 @@
         const kepler    = globalThis['@youwol/kepler']
 
         const model = {
-            grid: false,
             bbox: false,
-            backgroundColor: '#3d3d3d'
+            backgroundColor: '#e6e6e6'
         }
 
         const plines = {
